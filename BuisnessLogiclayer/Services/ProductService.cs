@@ -24,24 +24,27 @@ namespace BuisnessLogiclayer.Services
             return new ProductDTO { Id = createdProduct.Id, Name = createdProduct.Name, Price = createdProduct.Price };
         }
 
-        public Task<bool> DeleteProduct(int id)
+        public async Task<bool> DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+           return await _productRepository.DeleteProduct(id);
         }
 
-        public Task<IEnumerable<ProductDTO>> GetAllProducts()
+        public async Task<IEnumerable<ProductDTO>> GetAllProducts()
         {
-            throw new NotImplementedException();
+            var products = await _productRepository.GetAllProducts();
+            return products.Select(p => new ProductDTO { Id = p.Id, Name = p.Name, Price = p.Price }).ToList();
         }
 
-        public Task<ProductDTO> GetProductById(int id)
+        public async Task<ProductDTO> GetProductById(int id)
         {
-            throw new NotImplementedException();
+            var product = await _productRepository.GetProductById(id);
+            return product == null ? null : new ProductDTO { Id = product.Id, Name = product.Name, Price = product.Price };
         }
 
-        public Task<bool> UpdateProduct(ProductDTO productDto)
+        public async Task<bool> UpdateProduct(ProductDTO productDto)
         {
-            throw new NotImplementedException();
+            var product = new Product { Id = productDto.Id, Name = productDto.Name, Price = productDto.Price };
+            return await _productRepository.UpdateProduct(product);
         }
     }
 }
