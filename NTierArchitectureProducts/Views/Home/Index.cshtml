@@ -1,8 +1,114 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Products";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Product List</h2>
+    @* <button id="addProductBtn" class="btn btn-primary" data-target="#myModal">Add Product</button> *@
+    <button type="button" id="addProductBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">
+        Add product
+    </button>
 </div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="productTable"></tbody>
+</table>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAddEmployee" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabelAddEmployee">Add Employee</h4>
+                <h4 class="modal-title" style="display:none;" id="myModalLabelUpdateEmployee">Update Employee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="Id" name="Id" />
+                    <div class="form-group">
+                        <label for="firstName">FirstName</label>
+                        <input type="text" class="form-control" id="firstName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">LastName</label>
+                        <input type="text" class="form-control" id="lastName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="text" class="form-control" id="age" />
+                    </div>
+                   
+
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAdd" onclick="Add()">Add Employee</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+@section Scripts {
+   
+    <script>
+        $(document).ready(function (){
+               loadProducts();
+
+        function loadProducts() {
+            $.ajax({
+                url: "/api/products",
+                type: "GET",
+                success: function (data) {
+                    var rows = "";
+                    $.each(data, function (i, product) {
+                        rows += `<tr>
+                                    <td>${product.id}</td>
+                                    <td>${product.name}</td>
+                                    <td>${product.price}</td>
+                                    <td>
+                                        <button onclick="editProduct(${product.id})">Edit</button>
+                                        <button onclick="deleteProduct(${product.id})">Delete</button>
+                                    </td>
+                                 </tr>`;
+                    });
+                    $("#productTable").html(rows);
+                }
+            });
+        }
+     
+         $("#addProductBtn").click(function () {
+          
+             $('#myModal').modal('show')
+         }).
+
+         $("#addProductBtn").click(function () {
+            $("#productId").val("");
+            $("#productName").val("");
+            $("#productPrice").val("");
+            $("#productModalLabel").text("Add Product");
+            $("#productModal").modal("show");
+        });
+
+
+
+
+        }
+    </script>
+}
