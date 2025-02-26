@@ -5,7 +5,7 @@
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <h2>Product List</h2>
     @* <button id="addProductBtn" class="btn btn-primary" data-target="#myModal">Add Product</button> *@
-    <button type="button" id="addProductBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="clearTextBox();">
+    <button type="button" id="addProductBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
         Add product
     </button>
 </div>
@@ -22,39 +22,55 @@
     <tbody id="productTable"></tbody>
 </table>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAddEmployee" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabelAddProduct" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabelAddEmployee">Add Employee</h4>
-                <h4 class="modal-title" style="display:none;" id="myModalLabelUpdateEmployee">Update Employee</h4>
+                <h4 class="modal-title" id="myModalLabelAddEmployee">Add Product</h4>
+                <h4 class="modal-title" style="display:none;" id="myModalLabelUpdateEmployee">Update Product</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <div class="modal-body">
-                <form>
-                    <input type="hidden" id="Id" name="Id" />
-                    <div class="form-group">
-                        <label for="firstName">FirstName</label>
-                        <input type="text" class="form-control" id="firstName" />
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Name:</label>
+                        <input type="text" id="productName" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="lastName">LastName</label>
-                        <input type="text" class="form-control" id="lastName" />
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Price:</label>
+                        <input type="number" id="productPrice" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="age">Age</label>
-                        <input type="text" class="form-control" id="age" />
-                    </div>
-                   
-
-
+                    <button type="submit" class="btn btn-success" onclick="Add()">Save</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnAdd" onclick="Add()">Add Employee</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabelUpdateProduct" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabelAddEmployee">Update Product</h4>
+                <h4 class="modal-title" style="display:none;" id="myModalLabelUpdateEmployee">Update Product</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="updateproductId">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Name:</label>
+                        <input type="text" id="updateproductName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Price:</label>
+                        <input type="number" id="updateproductPrice" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-success" onclick="Update()">Update</button>
+                </form>
             </div>
         </div>
     </div>
@@ -66,49 +82,84 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 @section Scripts {
-   
     <script>
-        $(document).ready(function (){
-               loadProducts();
 
-        function loadProducts() {
-            $.ajax({
-                url: "/api/products",
-                type: "GET",
-                success: function (data) {
-                    var rows = "";
-                    $.each(data, function (i, product) {
-                        rows += `<tr>
-                                    <td>${product.id}</td>
-                                    <td>${product.name}</td>
-                                    <td>${product.price}</td>
-                                    <td>
-                                        <button onclick="editProduct(${product.id})">Edit</button>
-                                        <button onclick="deleteProduct(${product.id})">Delete</button>
-                                    </td>
-                                 </tr>`;
-                    });
-                    $("#productTable").html(rows);
-                }
-            });
+           $(document).ready(function(){
+                loadProducts();
+           })
+
+          function loadProducts() {
+
+             $.ajax({
+                 url: "/api/products",
+                 type: "GET",
+                 success: function (data) {
+                     var rows = "";
+                     $.each(data, function (i, product) {
+                         rows += `<tr>
+                                     <td>${product.id}</td>
+                                     <td>${product.name}</td>
+                                     <td>${product.price}</td>
+                                     <td>
+                           <button type="button" id="addProductBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"  onclick="editProduct(${product.id})">Edit</button>
+                           <button onclick="deleteProduct(${product.id})">Delete</button>
+                                     </td>
+                                  </tr>`;
+                     });
+                     $("#productTable").html(rows);
+                 }
+             });
+          };
+
+
+         function Add() {
+            debugger
+            console.log("add clicked");
+            var id = $("#productId").val();
+            var product = {
+                name: $("#productName").val(),
+                price: parseFloat($("#productPrice").val())
+            };
+
+           $.ajax({
+                    url: "/api/products",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(product),
+                    success: function () {
+                        loadProducts();
+                        $("#productModal").modal("hide");
+                    }
+           });
+         };
+
+            function editProduct(id) {
+            $("#updateproductId").val(id);   // Set hidden field with product ID
+           
         }
-     
-         $("#addProductBtn").click(function () {
-          
-             $('#myModal').modal('show')
-         }).
+        function Update(){
+         
+           debugger
+          var id = $("#updateproductId").val();
+            var product = {
+                 id: id,
+                name: $("#updateproductName").val(),
+                price: parseFloat($("#updateproductPrice").val())
+            };
+           $.ajax({
+                 url: `/api/products/${id}`,
+                 type: "PUT",
+                 contentType: "application/json",
+                 data: JSON.stringify(product),
+                 success: function () {
+                     loadProducts();
+                     $("#productModal").modal("hide");
+                 }
+             });
 
-         $("#addProductBtn").click(function () {
-            $("#productId").val("");
-            $("#productName").val("");
-            $("#productPrice").val("");
-            $("#productModalLabel").text("Add Product");
-            $("#productModal").modal("show");
-        });
+        };
 
 
-
-
-        }
     </script>
 }
+
