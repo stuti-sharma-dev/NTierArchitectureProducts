@@ -135,10 +135,11 @@
 
             function editProduct(id) {
             $("#updateproductId").val(id);   // Set hidden field with product ID
-           
         }
+
+
         function Update(){
-         
+
            debugger
           var id = $("#updateproductId").val();
             var product = {
@@ -159,6 +160,17 @@
 
         };
 
+      function deleteProduct(id){
+            debugger
+            if (confirm("Are you sure?")) {
+                $.ajax({
+                    url: `/api/products/${id}`,
+                    type: "DELETE",
+                    success: function () {
+                        loadProducts();
+                    }
+                });
+      }      };
 
     </script>
 }
