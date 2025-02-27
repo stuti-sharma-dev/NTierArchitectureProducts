@@ -16,6 +16,8 @@
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
+            <th>DateOfBirth</th>
+
             <th>Actions</th>
         </tr>
     </thead>
@@ -41,6 +43,11 @@
                     <div class="mb-3">
                         <label for="productPrice" class="form-label">Price:</label>
                         <input type="number" id="productPrice" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                        <input for="DateOfBirth" type="date" id="dob" class="form-control">
+                        <span for="DateOfBirth" class="text-danger"></span>
                     </div>
                     <button type="submit" class="btn btn-success" onclick="Add()">Save</button>
                 </form>
@@ -100,6 +107,7 @@
                                      <td>${product.id}</td>
                                      <td>${product.name}</td>
                                      <td>${product.price}</td>
+                                        <td>${product.dateofbirth}</td>
                                      <td>
                            <button type="button" id="addProductBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"  onclick="editProduct(${product.id})">Edit</button>
                            <button onclick="deleteProduct(${product.id})">Delete</button>
@@ -119,6 +127,7 @@
             var product = {
                 name: $("#productName").val(),
                 price: parseFloat($("#productPrice").val())
+                dateofbirth : $("#dob").val();
             };
 
            $.ajax({
