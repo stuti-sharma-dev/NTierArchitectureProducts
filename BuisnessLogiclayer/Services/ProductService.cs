@@ -45,6 +45,7 @@ namespace BuisnessLogiclayer.Services
         {
             var product = new Product { Id = productDto.Id, Name = productDto.Name, Price = productDto.Price , DateOfBirth=productDto.DateOfBirth };
             return await _productRepository.UpdateProduct(product);
+
         }
     }
 }

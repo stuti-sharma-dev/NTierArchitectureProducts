@@ -14,5 +14,6 @@ namespace DataAccessLayer.Repositories
         Task<Product> CreateProduct(Product product);
         Task<bool> UpdateProduct(Product product);
         Task<bool> DeleteProduct(int id);
+        Task<bool> DeleteProduct(int id);
     }
 }
