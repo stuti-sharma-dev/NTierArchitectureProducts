@@ -24,6 +24,7 @@ namespace BuisnessLogiclayer.Services
             return new ProductDTO { Id = createdProduct.Id, Name = createdProduct.Name, Price = createdProduct.Price };
         }
 
+
         public async Task<bool> DeleteProduct(int id)
         {
            return await _productRepository.DeleteProduct(id);
@@ -45,7 +46,8 @@ namespace BuisnessLogiclayer.Services
         {
             var product = new Product { Id = productDto.Id, Name = productDto.Name, Price = productDto.Price , DateOfBirth=productDto.DateOfBirth };
             return await _productRepository.UpdateProduct(product);
-
         }
+
+
     }
 }
